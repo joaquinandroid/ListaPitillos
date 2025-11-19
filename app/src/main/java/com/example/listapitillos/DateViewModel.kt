@@ -22,18 +22,20 @@ class DateViewModel(private val manager: DataStoreManager) : ViewModel(){
 
     fun saveNextDate() {
         viewModelScope.launch {
+
             val currentDates = manager.datesFlow.first()
+            val newDates = mutableListOf<Date?>(Date())
+            val limit = minOf(currentDates.size, MAX_DATES - 1)
 
-            val indexToSave: Int
-
-            if (currentDates.size < MAX_DATES) {
-                indexToSave = currentDates.size + 1
-            } else {
-                indexToSave = 1
+            for (i in 0 until limit) {
+                newDates.add(currentDates[i])
             }
 
-            manager.saveDateAtIndex(indexToSave, Date())
+            while (newDates.size < MAX_DATES) {
+                newDates.add(null)
+            }
 
+            manager.saveAllDates(newDates)
         }
     }
 

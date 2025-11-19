@@ -50,4 +50,14 @@ class DataStoreManager(private val context: Context){
             preferences.remove(key)
         }
     }
+
+    suspend fun saveAllDates(newDates: List<Date?>){
+        newDates.forEachIndexed{ index, date ->
+            val managerIndex = index + 1
+            if (date != null) {
+                saveDateAtIndex(managerIndex, date)
+            }
+
+        }
+    }
 }
